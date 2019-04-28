@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 import curses
 import datetime
-from fetch import fetch_data
-from util import *
+from lib.fetch import fetch_data
+from lib.util import *
 
 scr = curses.initscr()
 scr.keypad(0)
 curses.noecho()
 scr.border()
-
 
 def fetchAndDisplay():
     scr.addstr(21, 2, "Loading")
