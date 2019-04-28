@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import curses
 import datetime
-from lib.fetch import fetch_data
-from lib.util import *
+from geojsonwatcher.fetch import fetch_data
+from geojsonwatcher.util import *
 
 scr = curses.initscr()
 scr.keypad(0)
