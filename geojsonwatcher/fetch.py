@@ -2,21 +2,27 @@ import urllib.request
 import json
 
 from geojsonwatcher.util import *
+from geojsonwatcher.feature import Feature
 
 EarthquakeUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson"
 
-
-class Feature(object):
-    def __init__(self, mag, time, place):
-        self.mag = str(mag)
-        self.time = timestamp_to_time(time)
-        self.place = place
+"""
+    Fetch data from the feed.
+"""
 
 
 def fetch_data():
     response = urllib.request.urlopen(EarthquakeUrl)
     json_data = response.read()
-    loaded_json = json.loads(json_data)
+    return process_quake_feed(json.loads(json_data))
+
+
+"""
+    Generate a list of Feature objects.
+"""
+
+
+def process_quake_feed(loaded_json):
     newlist = sorted(loaded_json['features'],
                      key=lambda feature: feature['properties']['mag'], reverse=True)
 

@@ -11,18 +11,28 @@ curses.noecho()
 scr.border()
 scr.addstr(1, 64, "GJWatcher v0.1", curses.A_UNDERLINE)
 
+def clearDisplay(scr):
+    for l in range(14):
+        scr.addstr(l + 3, 2, ''.ljust(70))
+
+
+def initDisplay():
+    scr.addstr(21, 2, "Loaded    : ",  curses.A_REVERSE)
+    scr.addstr(20, 2, "Timestamp : ",  curses.A_REVERSE)
+    scr.refresh()
 
 def fetchAndDisplay():
-    scr.addstr(21, 2, "Loading")
     try:
+        scr.addstr(2, 2, "Loading")
+        scr.refresh()
         report = fetch_data()
-        scr.addstr(21, 2, "Loaded: ",  curses.A_REVERSE)
-        scr.addstr(20, 2, "Timestamp: ",  curses.A_REVERSE)
+        scr.addstr(2, 2, "       ")
+        scr.refresh()
         scr.addstr(21, 15, str(datetime.datetime.now().time()),  curses.A_DIM)
         scr.addstr(20, 15, timestamp_to_string(
             report[0]['generated']),  curses.A_DIM)
-        line = 2
-
+        line = 3
+        clearDisplay(scr)
         for entry in report[1]:
             scr.addstr(line, 2, entry.mag)
             scr.addstr(line, 8, entry.time)
@@ -36,10 +46,11 @@ def fetchAndDisplay():
 
 
 try:
+    initDisplay()
     while True:
         fetchAndDisplay()
         curses.napms(60000)
-except:
-    print('Error')
+except Exception as e:
+    print(e)
 finally:
     curses.endwin()
