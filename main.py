@@ -23,7 +23,7 @@ def initDisplay():
 
 def fetchAndDisplay():
     try:
-        scr.addstr(2, 2, "Loading")
+        scr.addstr(2, 2, "Connecting...", curses.A_BLINK)
         scr.refresh()
         report = fetch_data()
         scr.addstr(2, 2, "       ")
@@ -36,7 +36,8 @@ def fetchAndDisplay():
         for entry in report[1]:
             scr.addstr(line, 2, entry.mag)
             scr.addstr(line, 8, entry.time)
-            scr.addstr(line, 18, entry.place)
+            scr.addstr(line, 18, entry.site)
+            scr.addstr(line, 50, entry.area)
             line += 1
     except Exception as e:
         scr.addstr(2, 2, str(e))

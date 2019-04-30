@@ -9,4 +9,7 @@ class Feature(object):
     def __init__(self, mag, time, place):
         self.mag = str(mag)
         self.time = timestamp_to_time(time)
-        self.place = place
+        location = place.split(',')
+        self.site = location[0]
+        if len(location) > 1:
+            self.area = location[1]
