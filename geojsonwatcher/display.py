@@ -1,5 +1,6 @@
 import curses
 import datetime
+import logging
 
 from geojsonwatcher.util import *
 from geojsonwatcher.util import getTime
@@ -29,6 +30,7 @@ class Display(object):
             datetime.datetime.now().time()),  curses.A_DIM)
 
     def show_report(self, report):
+        logging.info('show report :: ' + str(report))
         self.scr.addstr(20, 15, timestamp_to_string(
             report[0]['generated']),  curses.A_DIM)
         line = 3
@@ -39,8 +41,24 @@ class Display(object):
             self.scr.addstr(line, 18, entry.site)
             self.scr.addstr(line, 50, entry.area)
             line += 1
+        self.scr.refresh()
+        logging.info('Report complete.')
 
     def show_error(self, e):
         self.scr.addstr(2, 2, str(e))
         self.scr.addstr(21, 21, "Error updating at " +
                         getTime(), curses.A_BLINK)
+
+    def loadingData(self, fetchMethod):
+        report = None
+        try:
+            self.enter_loading_state()
+            report = fetchMethod()
+            logging.info('latest_report :: ' + str(report))
+            self.exit_loading_state()
+        except Exception as e:
+            logging.error("Exception in fetchAndDisplay")
+            self.show_error(e)
+        self.scr.refresh()
+        logging.info('Returning : ' + str(report))
+        return report
