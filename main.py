@@ -26,7 +26,7 @@ def fetchAndDisplay():
         scr.addstr(2, 2, "Connecting...", curses.A_BLINK)
         scr.refresh()
         report = fetch_data()
-        scr.addstr(2, 2, "       ")
+        scr.addstr(2, 2, "                 ")
         scr.refresh()
         scr.addstr(21, 15, str(datetime.datetime.now().time()),  curses.A_DIM)
         scr.addstr(20, 15, timestamp_to_string(
