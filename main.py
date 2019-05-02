@@ -22,6 +22,5 @@ try:
 except Exception as e:
     logging.error("Exception in main loop")
     logging.error(str(e))
-    print(e)
 finally:
     curses.endwin()
