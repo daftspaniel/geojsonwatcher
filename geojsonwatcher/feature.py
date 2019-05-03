@@ -13,3 +13,5 @@ class Feature(object):
         self.site = location[0]
         if len(location) > 1:
             self.area = location[1]
+        else:
+            self.area = 'Unknown.'
