@@ -6,7 +6,7 @@ from time import strftime
 """
 
 
-def timestamp_to_string(timestamp):
+def timestamp_to_string(timestamp) -> str:
     return str(datetime.datetime.fromtimestamp(timestamp/1000))
 
 
@@ -15,12 +15,15 @@ def timestamp_to_string(timestamp):
 """
 
 
-def timestamp_to_time(timestamp):
+def timestamp_to_time(timestamp) -> str:
     geo_time = datetime.datetime.fromtimestamp(timestamp/1000).time()
     return geo_time.strftime("%H:%M:%S")
+
 
 """
     Get current time as string.
 """
-def get_time():
+
+
+def get_time() -> str:
     return str(datetime.datetime.now().time())

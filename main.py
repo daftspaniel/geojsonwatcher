@@ -5,15 +5,15 @@ import logging
 from geojsonwatcher.fetch import fetch_data
 from geojsonwatcher.display import Display
 from geojsonwatcher.report import Report
+from geojsonwatcher.common.log import setup_logging, log
 
-logging.basicConfig(filename='main.log', level=logging.DEBUG)
-logging.info('Application started.')
-
+setup_logging()
 scr = curses.initscr()
 display = Display(scr)
 fetched_report = None
 latest_report = None
 running_report = Report('Running', {})
+log('GeoJSON starting...')
 
 try:
     while True:

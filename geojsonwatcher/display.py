@@ -14,6 +14,7 @@ class Display(object):
         self.scr.addstr(21, 2, "Loaded    : ",  curses.A_REVERSE)
         self.scr.addstr(20, 2, "Timestamp : ",  curses.A_REVERSE)
         self.scr.refresh()
+        self.main_display_line_count = 16
 
     def clearDisplay(self):
         for l in range(14):
@@ -42,7 +43,7 @@ class Display(object):
         self.scr.addstr(20, 15, timestamp_to_string(
             report.metadata['generated']),  curses.A_DIM)
         line = 3
-        for entry in report.entries[:16]:
+        for entry in report.entries[:self.main_display_line_count]:
             self.scr.addstr(line, 2, entry.mag)
             self.scr.addstr(line, 8, entry.time)
             self.scr.addstr(line, 18, entry.site)

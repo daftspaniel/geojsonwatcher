@@ -11,7 +11,7 @@ EarthquakeUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_h
 """
 
 
-def fetch_data():
+def fetch_data() -> dict:
     response = urllib.request.urlopen(EarthquakeUrl)
     json_data = response.read()
     return process_quake_feed(json.loads(json_data))
@@ -22,7 +22,7 @@ def fetch_data():
 """
 
 
-def process_quake_feed(loaded_json):
+def process_quake_feed(loaded_json : dict) -> dict:
     out = []
     for feature in loaded_json['features']:
         q = feature['properties']

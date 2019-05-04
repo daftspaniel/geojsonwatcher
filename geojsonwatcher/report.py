@@ -8,12 +8,14 @@ class Report(object):
         self.name = name
         self.metadata = metadata
         self.entries = entries
+        self.updates = 1
 
     def sort_entries(self):
         self.entries = sorted(self.entries,
                               key=lambda feature: feature.mag, reverse=True)
 
     def append(self, report):
+        self.updates += 1
         self.metadata['generated'] = 1556911050000
         self.entries.extend(report.entries)
         visited = set()
