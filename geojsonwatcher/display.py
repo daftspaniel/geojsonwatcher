@@ -32,6 +32,8 @@ class Display(object):
 
     def show_report(self, report : Report):
         self.clearDisplay()
+        self.scr.addstr(1, 2, report.name)
+
         if report is None:
             self.scr.addstr(3, 2, 'Could not read feed')
             return 
@@ -41,7 +43,7 @@ class Display(object):
         self.scr.addstr(20, 15, timestamp_to_string(
             report.metadata['generated']),  curses.A_DIM)
         line = 3
-        for entry in report.entries[:8]:
+        for entry in report.entries[:16]:
             self.scr.addstr(line, 2, entry.mag)
             self.scr.addstr(line, 8, entry.time)
             self.scr.addstr(line, 18, entry.site)

@@ -23,12 +23,10 @@ def fetch_data():
 
 
 def process_quake_feed(loaded_json):
-    newlist = sorted(loaded_json['features'],
-                     key=lambda feature: feature['properties']['mag'], reverse=True)
-
     out = []
-    for feature in newlist:
+    for feature in loaded_json['features']:
         q = feature['properties']
         out.append(Feature(q['mag'], q['time'], q['place'], q['url']))
-
-    return Report('Latest', loaded_json['metadata'], out)
+    latest_report = Report('Latest', loaded_json['metadata'], out)
+    latest_report.sort_entries()
+    return latest_report
