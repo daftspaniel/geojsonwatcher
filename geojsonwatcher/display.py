@@ -5,34 +5,47 @@ import logging
 from geojsonwatcher.common.util import get_time, timestamp_to_string
 from geojsonwatcher.report import Report
 
+"""
+    Display app in a Curses window.
+"""
 
 class Display(object):
     def __init__(self, scr):
         self.scr = scr
+ 
+        # Set up the key screen positions.
+        self.status_x = 2
+        self.status_y = 2
+        self.main_display_line_count = 16
+        self.report_name_y = 1
+        self.report_name_x = 2
+        self.error_text = (21,21)
+        self.footer_y = 1234
+
+        # Draw core screen.
         self.scr.border()
         self.scr.addstr(1, 64, "GJWatcher v0.1", curses.A_UNDERLINE)
         self.scr.addstr(21, 2, "Loaded    : ",  curses.A_REVERSE)
         self.scr.addstr(20, 2, "Timestamp : ",  curses.A_REVERSE)
         self.scr.refresh()
-        self.main_display_line_count = 16
 
-    def clearDisplay(self):
-        for l in range(14):
+    def clear_display(self):
+        for l in range(self.main_display_line_count):
             self.scr.addstr(l + 3, 2, ''.ljust(70))
         self.scr.addstr(20, 14, ''.ljust(50))
         self.scr.addstr(21, 14, ''.ljust(50))
 
     def enter_loading_state(self):
-        self.scr.addstr(2, 2, "Connecting...", curses.A_BLINK)
+        self.scr.addstr(self.status_y, self.status_x, "Connecting...", curses.A_BLINK)
         self.scr.refresh()
 
     def exit_loading_state(self):
-        self.scr.addstr(2, 2, "                 ")
+        self.scr.addstr(self.status_y, self.status_x, "".ljust(13))
         self.scr.refresh()
 
     def show_report(self, report: Report):
-        self.clearDisplay()
-        self.scr.addstr(1, 2, report.name.ljust(10))
+        self.clear_display()
+        self.scr.addstr(self.report_name_y, self.report_name_x, report.name.ljust(10))
 
         if report is None:
             self.scr.addstr(3, 2, 'Could not read feed')
@@ -53,20 +66,20 @@ class Display(object):
         logging.info('Report complete.')
 
     def show_error(self, e):
-        self.scr.addstr(21, 21, "Error updating at " +
+        self.scr.addstr(self.error_text[0], self.error_text[1], "Error updating at " +
                         get_time(), curses.A_BLINK)
 
-    def loadingData(self, fetchMethod):
+    def loading_data(self, fetch_method):
         report = None
         try:
             self.enter_loading_state()
-            report = fetchMethod()
+            report = fetch_method()
             logging.info('latest_report :: ' + str(report))
             self.exit_loading_state()
         except Exception as e:
-            logging.error("Exception in loadingData")
+            logging.error("Exception in loading_data")
             logging.error(str(e))
             self.show_error(e)
         self.scr.refresh()
-        logging.info('Returning : ' + str(report))
+        logging.info('Returning : ' + str(report) + '.')
         return report
