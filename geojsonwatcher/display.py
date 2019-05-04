@@ -3,7 +3,7 @@ import datetime
 import logging
 
 from geojsonwatcher.common.util import get_time, timestamp_to_string
-from geojsonwatcher.report import Report
+from geojsonwatcher.data_structures.report import Report
 
 """
     Display app in a Curses window.

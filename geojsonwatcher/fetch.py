@@ -1,8 +1,8 @@
 import urllib.request
 import json
 
-from geojsonwatcher.feature import Feature
-from geojsonwatcher.report import Report
+from geojsonwatcher.data_structures.feature import Feature
+from geojsonwatcher.data_structures.report import Report
 
 EarthquakeUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson"
 
