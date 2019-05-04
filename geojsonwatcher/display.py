@@ -2,8 +2,7 @@ import curses
 import datetime
 import logging
 
-from geojsonwatcher.util import *
-from geojsonwatcher.util import getTime
+from geojsonwatcher.common.util import get_time, timestamp_to_string
 from geojsonwatcher.report import Report
 
 
@@ -30,13 +29,13 @@ class Display(object):
         self.scr.addstr(2, 2, "                 ")
         self.scr.refresh()
 
-    def show_report(self, report : Report):
+    def show_report(self, report: Report):
         self.clearDisplay()
-        self.scr.addstr(1, 2, report.name)
+        self.scr.addstr(1, 2, report.name.ljust(10))
 
         if report is None:
             self.scr.addstr(3, 2, 'Could not read feed')
-            return 
+            return
         logging.info('show report :: ' + str(report.name))
         self.scr.addstr(21, 15, str(
             datetime.datetime.now().time()),  curses.A_DIM)
@@ -54,7 +53,7 @@ class Display(object):
 
     def show_error(self, e):
         self.scr.addstr(21, 21, "Error updating at " +
-                        getTime(), curses.A_BLINK)
+                        get_time(), curses.A_BLINK)
 
     def loadingData(self, fetchMethod):
         report = None

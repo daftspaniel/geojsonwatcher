@@ -1,4 +1,4 @@
-from geojsonwatcher.util import timestamp_to_time
+from geojsonwatcher.common.util import timestamp_to_time
 
 """
     GeoJSON earthquake class.

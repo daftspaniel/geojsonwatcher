@@ -22,5 +22,5 @@ def timestamp_to_time(timestamp):
 """
     Get current time as string.
 """
-def getTime():
+def get_time():
     return str(datetime.datetime.now().time())

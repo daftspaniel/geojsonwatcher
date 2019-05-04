@@ -11,13 +11,16 @@ logging.info('Application started.')
 
 scr = curses.initscr()
 display = Display(scr)
+fetched_report = None
 latest_report = None
 running_report = Report('Running', {})
 
 try:
     while True:
-        latest_report = display.loadingData(fetch_data)
-        running_report.append(latest_report)
+        fetched_report = display.loadingData(fetch_data)
+        if not fetched_report is None:
+            latest_report = fetched_report
+            running_report.append(latest_report)
 
         logging.info('latest_report : ' + str(latest_report))
         display.show_report(latest_report)
