@@ -4,6 +4,7 @@ import logging
 
 from geojsonwatcher.util import *
 from geojsonwatcher.util import getTime
+from geojsonwatcher.report import Report
 
 
 class Display(object):
@@ -29,18 +30,18 @@ class Display(object):
         self.scr.addstr(2, 2, "                 ")
         self.scr.refresh()
 
-    def show_report(self, report):
+    def show_report(self, report : Report):
         self.clearDisplay()
         if report is None:
             self.scr.addstr(3, 2, 'Could not read feed')
             return 
-        logging.info('show report :: ' + str(report))
+        logging.info('show report :: ' + str(report.name))
         self.scr.addstr(21, 15, str(
             datetime.datetime.now().time()),  curses.A_DIM)
         self.scr.addstr(20, 15, timestamp_to_string(
-            report[0]['generated']),  curses.A_DIM)
+            report.metadata['generated']),  curses.A_DIM)
         line = 3
-        for entry in report[1]:
+        for entry in report.entries[:8]:
             self.scr.addstr(line, 2, entry.mag)
             self.scr.addstr(line, 8, entry.time)
             self.scr.addstr(line, 18, entry.site)
@@ -62,6 +63,7 @@ class Display(object):
             self.exit_loading_state()
         except Exception as e:
             logging.error("Exception in loadingData")
+            logging.error(str(e))
             self.show_error(e)
         self.scr.refresh()
         logging.info('Returning : ' + str(report))

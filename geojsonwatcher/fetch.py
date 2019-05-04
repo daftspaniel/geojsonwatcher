@@ -1,8 +1,8 @@
 import urllib.request
 import json
 
-from geojsonwatcher.util import *
 from geojsonwatcher.feature import Feature
+from geojsonwatcher.report import Report
 
 EarthquakeUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson"
 
@@ -29,6 +29,6 @@ def process_quake_feed(loaded_json):
     out = []
     for feature in newlist:
         q = feature['properties']
-        out.append(Feature(q['mag'], q['time'], q['place']))
+        out.append(Feature(q['mag'], q['time'], q['place'], q['url']))
 
-    return (loaded_json['metadata'], out)
+    return Report('Latest', loaded_json['metadata'], out)
