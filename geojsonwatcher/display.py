@@ -44,6 +44,8 @@ class Display(object):
         self.scr.refresh()
 
     def show_report(self, report: Report):
+        if report is None:
+            return
         self.clear_display()
         self.scr.addstr(self.report_name_y, self.report_name_x, report.name.ljust(10))
 

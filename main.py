@@ -4,7 +4,7 @@ import logging
 
 from geojsonwatcher.fetch import fetch_data
 from geojsonwatcher.display import Display
-from geojsonwatcher.report import Report
+from geojsonwatcher.data_structures.report import Report
 from geojsonwatcher.common.log import setup_logging, log
 
 setup_logging()
