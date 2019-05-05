@@ -27,13 +27,14 @@ class Display(object):
         self.scr.addstr(1, 64, "GJWatcher v0.1", curses.A_UNDERLINE)
         self.scr.addstr(21, 2, "Loaded    : ",  curses.A_REVERSE)
         self.scr.addstr(20, 2, "Timestamp : ",  curses.A_REVERSE)
+        self.scr.addstr(20, 42, "Features : ",  curses.A_REVERSE)
         self.scr.refresh()
 
     def clear_display(self):
         for l in range(self.main_display_line_count):
             self.scr.addstr(l + 3, 2, ''.ljust(70))
-        self.scr.addstr(20, 14, ''.ljust(50))
-        self.scr.addstr(21, 14, ''.ljust(50))
+        self.scr.addstr(20, 14, ''.ljust(20))
+        self.scr.addstr(21, 14, ''.ljust(20))
 
     def enter_loading_state(self):
         self.scr.addstr(self.status_y, self.status_x, "Connecting...", curses.A_BLINK)
@@ -57,6 +58,7 @@ class Display(object):
             datetime.datetime.now().time()),  curses.A_DIM)
         self.scr.addstr(20, 15, timestamp_to_string(
             report.metadata['generated']),  curses.A_DIM)
+        self.scr.addstr(20, 55, str(len(report.entries)),  curses.A_DIM)
         line = 3
         for entry in report.entries[:self.main_display_line_count]:
             self.scr.addstr(line, 2, entry.mag)
