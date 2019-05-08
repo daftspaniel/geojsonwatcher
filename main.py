@@ -25,6 +25,8 @@ try:
         log('Showing latest feed report.')
         display.show_report(latest_report)
         curses.napms(30000)
+        if display.check_for_resize():
+            log('Something went wrong')
         log('Showing runnning report.')
         display.show_report(running_report)
         curses.napms(30000)

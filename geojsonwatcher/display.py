@@ -2,6 +2,7 @@ import curses
 import datetime
 import logging
 
+from geojsonwatcher.common.log import log
 from geojsonwatcher.common.util import get_time, timestamp_to_string
 from geojsonwatcher.data_structures.report import Report
 
@@ -13,6 +14,8 @@ from geojsonwatcher.data_structures.report import Report
 class Display(object):
     def __init__(self, scr):
         self.scr = scr
+        self.starty, self.startx = self.scr.getmaxyx()
+        log('Screen Size : ' + str(self.starty) + ' ' + str(self.startx))
 
         # Set up the key screen positions.
         self.status_x = 2
@@ -32,6 +35,8 @@ class Display(object):
         self.scr.addstr(20, 2, "Timestamp : ",  curses.A_REVERSE)
         self.scr.addstr(20, self.main_columns // 2,
                         "Features : ",  curses.A_REVERSE)
+        self.scr.addstr(21, self.main_columns // 2,
+                        "Updates  : ",  curses.A_REVERSE)
         curses.curs_set(0)
         self.scr.refresh()
 
@@ -50,6 +55,9 @@ class Display(object):
         self.scr.addstr(self.status_y, self.status_x, "".ljust(13))
         self.scr.refresh()
 
+    def check_for_resize(self):
+        return curses.is_term_resized(self.starty, self.startx)
+
     def show_report(self, report: Report):
         if report is None:
             return
@@ -65,7 +73,8 @@ class Display(object):
             datetime.datetime.now().time()),  curses.A_DIM)
         self.scr.addstr(20, 15, timestamp_to_string(
             report.metadata['generated']),  curses.A_DIM)
-        self.scr.addstr(20, 55, str(len(report.entries)),  curses.A_DIM)
+        self.scr.addstr(20, 55, str(len(report.entries)).ljust(5),  curses.A_DIM)
+        self.scr.addstr(21, 55, str(report.updates).ljust(5),  curses.A_DIM)
         line = 3
         for entry in report.entries[:self.main_display_line_count]:
             self.scr.addstr(line, 2, entry.mag)
