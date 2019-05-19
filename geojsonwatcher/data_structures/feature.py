@@ -19,4 +19,4 @@ class Feature(object):
 
 
 def sanitise_text(text):
-    return text.replace("'", "")
+    return text.replace("'", "").strip()
