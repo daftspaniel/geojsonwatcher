@@ -33,10 +33,6 @@ class FeatureStore(object):
 
     def store_feature(self, feature : Feature):
         log(feature.mag)
-        log(f"""
-                      INSERT INTO FEATURES (MAG,TIME,LOCATION,AREA)
-                      VALUES ({feature.mag},'{feature.time}','{feature.site}','{feature.area}')
-                    """)
         self.connection.execute(f"""
                       INSERT INTO FEATURES (MAG,TIME,LOCATION,AREA)
                       VALUES ({feature.mag},'{feature.time}','{feature.site}','{feature.area}')

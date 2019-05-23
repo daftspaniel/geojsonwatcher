@@ -25,12 +25,12 @@ try:
             latest_report = fetched_report
             running_report.append(latest_report)
         
-        log('Storing report.')
-        storage.connect()
-        for entry in latest_report.entries:
-            storage.store_feature(entry)
-        storage.connection.commit()
-        storage.disconnect()
+            log('Storing report.')
+            storage.connect()
+            for entry in latest_report.entries:
+                storage.store_feature(entry)
+            storage.connection.commit()
+            storage.disconnect()
 
         log('Showing latest feed report.')
         display.show_report(latest_report)
