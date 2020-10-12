@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-import curses
 import logging
+import time
 
 from geojsonwatcher.fetch import fetch_data
 from geojsonwatcher.display import Display
@@ -9,8 +9,7 @@ from geojsonwatcher.common.log import setup_logging, log
 from geojsonwatcher.storage.feature_store import FeatureStore
 
 setup_logging()
-scr = curses.initscr()
-display = Display(scr)
+display = Display()
 storage = FeatureStore('quakes.db')
 storage.connect()
 fetched_report = None
@@ -34,15 +33,12 @@ try:
 
         log('Showing latest feed report.')
         display.show_report(latest_report)
-        curses.napms(30000)
-        if display.check_for_resize():
-            log('Something went wrong')
+        time.sleep(30)
         
         log('Showing runnning report.')
         display.show_report(running_report)
-        curses.napms(30000)
+        time.sleep(30)
 except Exception as e:
+    print(str(e))
     logging.error("Exception in main loop")
     logging.error(str(e))
-finally:
-    curses.endwin()
