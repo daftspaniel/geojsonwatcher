@@ -4,7 +4,8 @@ import os.path
 from geojsonwatcher.data_structures.feature import Feature
 from geojsonwatcher.common.log import log
 
-class FeatureStore(object):
+
+class FeatureStore:
     def __init__(self, filename):
         self.filename = filename
         self.is_new_database = not os.path.isfile(self.filename)
@@ -31,7 +32,7 @@ class FeatureStore(object):
                         AREA             TEXT     NOT NULL
                        );''')
 
-    def store_feature(self, feature : Feature):
+    def store_feature(self, feature: Feature):
         log(feature.mag)
         self.connection.execute(f"""
                       INSERT INTO FEATURES (MAG,TIME,LOCATION,AREA)

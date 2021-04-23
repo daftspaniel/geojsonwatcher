@@ -8,6 +8,8 @@ from geojsonwatcher.data_structures.report import Report
 from geojsonwatcher.common.log import setup_logging, log
 from geojsonwatcher.storage.feature_store import FeatureStore
 
+DELAY = 30000
+
 setup_logging()
 scr = curses.initscr()
 display = Display(scr)
@@ -24,7 +26,7 @@ try:
         if not fetched_report is None:
             latest_report = fetched_report
             running_report.append(latest_report)
-        
+
             log('Storing report.')
             storage.connect()
             for entry in latest_report.entries:
@@ -34,13 +36,14 @@ try:
 
         log('Showing latest feed report.')
         display.show_report(latest_report)
-        curses.napms(30000)
+        curses.napms(DELAY)
         if display.check_for_resize():
-            log('Something went wrong')
-        
+            log('Resize')
+            display.draw_core_screen()
+
         log('Showing runnning report.')
         display.show_report(running_report)
-        curses.napms(30000)
+        curses.napms(DELAY)
 except Exception as e:
     logging.error("Exception in main loop")
     logging.error(str(e))

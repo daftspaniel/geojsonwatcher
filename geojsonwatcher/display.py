@@ -11,7 +11,7 @@ from geojsonwatcher.data_structures.report import Report
 """
 
 
-class Display(object):
+class Display:
     def __init__(self, scr):
         self.scr = scr
         self.starty, self.startx = self.scr.getmaxyx()
@@ -26,16 +26,23 @@ class Display(object):
         self.report_name_x = 2
         self.error_text = (21, 21)
         self.footer_y = 1234
+        self.draw_core_screen()
 
+    def draw_core_screen(self):
+        self.starty, self.startx = self.scr.getmaxyx()
+        self.footer_y = self.starty - 3
+        self.main_display_line_count = self.starty - 6
         # Draw core screen.
+        self.scr.clear()
         self.scr.border()
-        self.scr.addstr(1, self.main_columns - 12,
-                        "GJWatcher v0.1", curses.A_UNDERLINE)
-        self.scr.addstr(21, 2, "Loaded    : ",  curses.A_REVERSE)
-        self.scr.addstr(20, 2, "Timestamp : ",  curses.A_REVERSE)
-        self.scr.addstr(20, self.main_columns // 2,
+        self.scr.addstr(1, self.startx - 16,
+                        "GJWatcher v0.2", curses.A_UNDERLINE)
+        self.scr.addstr(self.footer_y + 1, 2,
+                        "Loaded    : ",  curses.A_REVERSE)
+        self.scr.addstr(self.footer_y, 2, "Timestamp : ",  curses.A_REVERSE)
+        self.scr.addstr(self.footer_y, self.main_columns // 2,
                         "Features : ",  curses.A_REVERSE)
-        self.scr.addstr(21, self.main_columns // 2,
+        self.scr.addstr(self.footer_y + 1, self.main_columns // 2,
                         "Updates  : ",  curses.A_REVERSE)
         curses.curs_set(0)
         self.scr.refresh()
@@ -43,8 +50,8 @@ class Display(object):
     def clear_display(self):
         for l in range(self.main_display_line_count):
             self.scr.addstr(l + 3, 2, ''.ljust(70))
-        self.scr.addstr(20, 14, ''.ljust(20))
-        self.scr.addstr(21, 14, ''.ljust(20))
+        self.scr.addstr(self.footer_y, 14, ''.ljust(20))
+        self.scr.addstr(self.footer_y + 1, 14, ''.ljust(20))
 
     def enter_loading_state(self):
         self.scr.addstr(self.status_y, self.status_x,
@@ -69,18 +76,22 @@ class Display(object):
             self.scr.addstr(3, 2, 'Could not read feed')
             return
         logging.info('show report :: ' + str(report.name))
-        self.scr.addstr(21, 15, str(
+        self.scr.addstr(self.footer_y + 1, 15, str(
             datetime.datetime.now().time()),  curses.A_DIM)
-        self.scr.addstr(20, 15, timestamp_to_string(
+        self.scr.addstr(self.footer_y, 15, timestamp_to_string(
             report.metadata['generated']),  curses.A_DIM)
-        self.scr.addstr(20, 55, str(len(report.entries)).ljust(5),  curses.A_DIM)
-        self.scr.addstr(21, 55, str(report.updates).ljust(5),  curses.A_DIM)
+        self.scr.addstr(self.footer_y, 55, str(
+            len(report.entries)).ljust(5),  curses.A_DIM)
+        self.scr.addstr(self.footer_y + 1, 55,
+                        str(report.updates).ljust(5),  curses.A_DIM)
         line = 3
         for entry in report.entries[:self.main_display_line_count]:
             self.scr.addstr(line, 2, entry.mag)
             self.scr.addstr(line, 8, entry.time)
             self.scr.addstr(line, 18, entry.site)
             self.scr.addstr(line, 55, entry.area)
+            if self.startx > 130:
+                self.scr.addstr(line, 80, entry.url)
             line += 1
         self.scr.refresh()
         logging.info('Report complete.')

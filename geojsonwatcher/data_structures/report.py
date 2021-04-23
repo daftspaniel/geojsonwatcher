@@ -3,7 +3,7 @@
 """
 
 
-class Report(object):
+class Report:
     def __init__(self, name: str, metadata: dict, entries: list = []):
         self.name = name
         self.metadata = metadata
