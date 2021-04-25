@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 import curses
 import logging
+import os
+import os.path
+from pathlib import Path
 
 from geojsonwatcher.fetch import fetch_data
 from geojsonwatcher.display import Display
@@ -15,7 +18,7 @@ def main():
     setup_logging()
     scr = curses.initscr()
     display = Display(scr)
-    storage = FeatureStore('quakes.db')
+    storage = FeatureStore(get_feature_store_path())
     storage.connect()
     fetched_report = None
     latest_report = None
@@ -51,3 +54,12 @@ def main():
         logging.error(str(e))
     finally:
         curses.endwin()
+
+def get_feature_store_path():
+    config_folder = Path.joinpath(Path.joinpath(
+    Path.home(), '.config'), 'geojsonwatcher')
+    # Create config folder if it does not exist
+    if not os.path.exists(config_folder):
+        os.mkdir(config_folder)
+    # Build path to our feature store database.
+    return Path.joinpath(config_folder, 'quakes.db')

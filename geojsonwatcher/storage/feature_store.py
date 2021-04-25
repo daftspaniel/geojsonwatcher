@@ -7,12 +7,14 @@ from geojsonwatcher.common.log import log
 
 class FeatureStore:
     def __init__(self, filename):
+        self.connection = None
         self.filename = filename
         self.is_new_database = not os.path.isfile(self.filename)
         if self.is_new_database:
             self.create()
 
     def connect(self):
+        log(self.filename)
         self.connection = sqlite3.connect(self.filename)
 
     def disconnect(self):
@@ -29,12 +31,12 @@ class FeatureStore:
                         MAG              REAL     NOT NULL,
                         TIME             TEXT     NOT NULL,
                         LOCATION         TEXT     NOT NULL,
-                        AREA             TEXT     NOT NULL
+                        AREA             TEXT     NOT NULL,
+                        URL             TEXT     NOT NULL
                        );''')
 
     def store_feature(self, feature: Feature):
-        log(feature.mag)
         self.connection.execute(f"""
-                      INSERT INTO FEATURES (MAG,TIME,LOCATION,AREA)
-                      VALUES ({feature.mag},'{feature.time}','{feature.site}','{feature.area}')
+                      INSERT INTO FEATURES (MAG,TIME,LOCATION,AREA,URL)
+                      VALUES ({feature.mag},'{feature.time}','{feature.site}','{feature.area}','{feature.url}')
                     """)
