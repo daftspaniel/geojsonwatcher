@@ -30,8 +30,8 @@ class Display:
 
     def draw_core_screen(self):
         self.starty, self.startx = self.scr.getmaxyx()
-        self.footer_y = self.starty - 3
-        self.main_display_line_count = self.starty - 6
+        self.footer_y = self.starty - 4
+        self.main_display_line_count = self.starty - 7
         # Draw core screen.
         self.scr.clear()
         self.scr.border()
