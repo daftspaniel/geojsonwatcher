@@ -49,7 +49,7 @@ class Display:
 
     def clear_display(self):
         for l in range(self.main_display_line_count):
-            self.scr.addstr(l + 3, 2, ''.ljust(70))
+            self.scr.addstr(l + 3, 2, ''.ljust(self.startx-3))
         self.scr.addstr(self.footer_y, 14, ''.ljust(20))
         self.scr.addstr(self.footer_y + 1, 14, ''.ljust(20))
 
