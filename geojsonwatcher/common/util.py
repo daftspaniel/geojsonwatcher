@@ -1,5 +1,4 @@
 import datetime
-from time import strftime
 
 """
     Convert timestamp in GeoJSON to readable string date.

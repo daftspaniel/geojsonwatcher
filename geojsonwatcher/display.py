@@ -14,8 +14,8 @@ from geojsonwatcher.data_structures.report import Report
 class Display:
     def __init__(self, scr):
         self.scr = scr
-        self.starty, self.startx = self.scr.getmaxyx()
-        log('Screen Size : ' + str(self.starty) + ' ' + str(self.startx))
+        self.size_y, self.size_x = self.scr.getmaxyx()
+        log('Screen Size : ' + str(self.size_y) + ' ' + str(self.size_x))
 
         # Set up the key screen positions.
         self.status_x = 2
@@ -29,13 +29,13 @@ class Display:
         self.draw_core_screen()
 
     def draw_core_screen(self):
-        self.starty, self.startx = self.scr.getmaxyx()
-        self.footer_y = self.starty - 4
-        self.main_display_line_count = self.starty - 7
+        self.size_y, self.size_x = self.scr.getmaxyx()
+        self.footer_y = self.size_y - 4
+        self.main_display_line_count = self.size_y - 7
         # Draw core screen.
         self.scr.clear()
         self.scr.border()
-        self.scr.addstr(1, self.startx - 16,
+        self.scr.addstr(1, self.size_x - 16,
                         "GJWatcher v0.2", curses.A_UNDERLINE)
         self.scr.addstr(self.footer_y + 1, 2,
                         "Loaded    : ",  curses.A_REVERSE)
@@ -48,8 +48,8 @@ class Display:
         self.scr.refresh()
 
     def clear_display(self):
-        for l in range(self.main_display_line_count):
-            self.scr.addstr(l + 3, 2, ''.ljust(self.startx-3))
+        for row in range(self.main_display_line_count):
+            self.scr.addstr(row + 3, 2, ''.ljust(self.size_x - 3))
         self.scr.addstr(self.footer_y, 14, ''.ljust(20))
         self.scr.addstr(self.footer_y + 1, 14, ''.ljust(20))
 
@@ -63,7 +63,7 @@ class Display:
         self.scr.refresh()
 
     def check_for_resize(self):
-        return curses.is_term_resized(self.starty, self.startx)
+        return curses.is_term_resized(self.size_y, self.size_x)
 
     def show_report(self, report: Report):
         if report is None:
@@ -90,13 +90,13 @@ class Display:
             self.scr.addstr(line, 8, entry.time)
             self.scr.addstr(line, 18, entry.site)
             self.scr.addstr(line, 55, entry.area)
-            if self.startx > 130:
+            if self.size_x > 130:
                 self.scr.addstr(line, 80, entry.url)
             line += 1
         self.scr.refresh()
         logging.info('Report complete.')
 
-    def show_error(self, e):
+    def show_error(self):
         self.scr.addstr(self.error_text[0], self.error_text[1], "Error updating at " +
                         get_time(), curses.A_BLINK)
 
@@ -110,7 +110,7 @@ class Display:
         except Exception as e:
             logging.error("Exception in loading_data")
             logging.error(str(e))
-            self.show_error(e)
+            self.show_error()
         self.scr.refresh()
         logging.info('Returning : ' + str(report) + '.')
         return report

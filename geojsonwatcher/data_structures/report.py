@@ -4,7 +4,9 @@
 
 
 class Report:
-    def __init__(self, name: str, metadata: dict, entries: list = []):
+    def __init__(self, name: str, metadata: dict, entries=None):
+        if entries is None:
+            entries = []
         self.name = name
         self.metadata = metadata
         self.entries = entries
