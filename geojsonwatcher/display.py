@@ -6,12 +6,11 @@ from geojsonwatcher.common.log import log
 from geojsonwatcher.common.util import get_time, timestamp_to_string
 from geojsonwatcher.data_structures.report import Report
 
-"""
-    Display app in a Curses window.
-"""
-
 
 class Display:
+    """
+        Display app in a Curses window.
+    """
     def __init__(self, scr):
         self.scr = scr
         self.size_y, self.size_x = self.scr.getmaxyx()

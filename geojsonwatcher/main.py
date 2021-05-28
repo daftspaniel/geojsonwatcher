@@ -9,7 +9,7 @@ from geojsonwatcher.fetch import fetch_data
 from geojsonwatcher.storage.feature_store import FeatureStore
 from geojsonwatcher.storage.store_management import get_feature_store_path
 
-DELAY = 30000
+DELAY = 1000
 
 
 def main():
@@ -23,31 +23,50 @@ def main():
     latest_report = None
     running_report = Report('Running', {})
     log('GeoJSON starting...')
+    tick = 0
+    report = 0
 
     try:
         while True:
-            fetched_report = display.loading_data(fetch_data)
-            if fetched_report is not None:
-                latest_report = fetched_report
-                running_report.append(latest_report)
+            if tick == 0:
+                fetched_report = display.loading_data(fetch_data)
+                if fetched_report is not None:
+                    latest_report = fetched_report
+                    running_report.append(latest_report)
 
-                log('Storing report.')
-                storage.connect()
-                for entry in latest_report.entries:
-                    storage.store_feature(entry)
-                storage.connection.commit()
-                storage.disconnect()
+                    log('Storing report.')
+                    storage.connect()
+                    for entry in latest_report.entries:
+                        storage.store_feature(entry)
+                    storage.connection.commit()
+                    storage.disconnect()
+                log('Showing latest feed report.')
+                display.show_report(latest_report)
+                report = 0
 
-            log('Showing latest feed report.')
-            display.show_report(latest_report)
-            curses.napms(DELAY)
-            if display.check_for_resize():
-                log('Resize')
+            elif tick == 30:
+                log('Showing running report.')
+                display.show_report(running_report)
+                tick = 0
+                report = 1
+
+            log('TICK' + str(tick))
+            # log(display.check_for_resize())
+            c = scr.getch()  # Get a keystroke
+            log('c'+str(c))
+            if c == 113:
+                curses.endwin()
+                exit(0)
+            elif c == curses.KEY_RESIZE or display.check_for_resize():
+                log('Resize at' + str(tick))
                 display.draw_core_screen()
+                if report == 0:
+                    display.show_report(latest_report)
+                else:
+                    display.show_report(running_report)
 
-            log('Showing running report.')
-            display.show_report(running_report)
             curses.napms(DELAY)
+            tick += 1
     except Exception as e:
         logging.error("Exception in main loop")
         logging.error(str(e))

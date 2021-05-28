@@ -1,9 +1,10 @@
-"""
-    Report object.
-"""
+""" Reporting functionality. """
 
 
 class Report:
+    """
+        Quake Report object.
+    """
     def __init__(self, name: str, metadata: dict, entries=None):
         if entries is None:
             entries = []
