@@ -40,3 +40,10 @@ class FeatureStore:
                       INSERT INTO FEATURES (MAG,TIME,LOCATION,AREA,URL)
                       VALUES ({feature.mag},'{feature.time}','{feature.site}','{feature.area}','{feature.url}')
                     """)
+
+    def get_record_count(self):
+        """ Returns the number of features currently in the database."""
+        record = self.connection.execute("""
+        SELECT count(*) FROM FEATURES
+        """).fetchall()
+        return record[0][0]

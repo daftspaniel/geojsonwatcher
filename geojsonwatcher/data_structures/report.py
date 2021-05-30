@@ -21,6 +21,7 @@ class Report:
     def append(self, report):
         self.updates += 1
         self.metadata['generated'] = 1556911050000
+        self.metadata['totalFeatures'] = 1556911050000
         self.entries.extend(report.entries)
         visited = set()
         self.entries = [e for e in self.entries

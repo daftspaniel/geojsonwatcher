@@ -43,6 +43,9 @@ class Display:
                         "Features : ",  curses.A_REVERSE)
         self.scr.addstr(self.footer_y + 1, self.main_columns // 2,
                         "Updates  : ",  curses.A_REVERSE)
+        if self.size_x > 130:
+            self.scr.addstr(self.footer_y, 80,
+                            "Stored Features  : ", curses.A_REVERSE)
         curses.curs_set(0)
         self.scr.refresh()
 
@@ -83,6 +86,10 @@ class Display:
             len(report.entries)).ljust(5),  curses.A_DIM)
         self.scr.addstr(self.footer_y + 1, 55,
                         str(report.updates).ljust(5),  curses.A_DIM)
+        if self.size_x > 130:
+            self.scr.addstr(self.footer_y, 105,
+                            str(report.metadata['totalFeatures']).ljust(8), curses.A_DIM)
+
         line = 3
         for entry in report.entries[:self.main_display_line_count]:
             self.scr.addstr(line, 2, entry.mag)
